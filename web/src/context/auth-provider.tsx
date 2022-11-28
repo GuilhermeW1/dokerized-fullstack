@@ -8,8 +8,6 @@ type UserType = {
   username: string
   password: string
   accountId: string
-
-  token: string
 }
 
 type RegisterReturnType = {
@@ -20,6 +18,11 @@ type RegisterReturnType = {
 type LoginReturnType = {
   status: string
   message: string
+}
+
+type TypeData = {
+  token: string
+  user: UserType
 }
 
 type AuthContextType = {
@@ -38,14 +41,15 @@ const AuthContext = React.createContext({} as AuthContextType)
 function AuthContextProvider(props: AuthContextProviderProps) {
   const [user, setUser] = React.useState<UserType>({} as UserType)
   const navigate = useNavigate()
-
   React.useEffect(() => {
     const data = localStorage.getItem('token-ng')
+
     if (!data) {
       return
     }
-    const parsedData = JSON.parse(data ?? '')
 
+    const parsedData = JSON.parse(data ?? '')
+    console.log(parsedData.user)
     if (parsedData) {
       api.defaults.headers.Authorization = `Bearer ${parsedData.token}`
       setUser(parsedData.user)
@@ -76,10 +80,9 @@ function AuthContextProvider(props: AuthContextProviderProps) {
       return { status: data.status, message: data.message }
     }
 
-    localStorage.setItem('token-ng', JSON.stringify(data.token))
+    localStorage.setItem('token-ng', JSON.stringify(data))
 
     api.defaults.headers.Authorization = `Bearer ${data.token}`
-
     setUser(data.user)
     return { status: 'Success', message: 'Success' }
   }

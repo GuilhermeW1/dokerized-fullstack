@@ -28,6 +28,10 @@ class TransactionController {
       throw new Error('User does not exists')
     }
 
+    if (creditedUserExists.id == currentUserId) {
+      throw new Error('You cant transfer to you')
+    }
+
     const debitedUserInfo: IBalance[] = await prisma.$queryRaw`
       select  a.id as account, a.balance
       from users u, accounts a

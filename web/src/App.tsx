@@ -9,7 +9,7 @@ import Register from './pages/register'
 
 function App() {
   const { user } = useAuth()
-
+  console.log(user)
   return <AppRoutes />
 }
 

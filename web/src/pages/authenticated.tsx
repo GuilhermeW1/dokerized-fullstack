@@ -41,13 +41,16 @@ function reducer(state: ReducerTransactions, action: ActionType) {
         currentTransactions: state.transactions
       }
     case 'CASH_IN':
+      console.log(state, action)
       return {
         transactions: state.transactions,
         currentTransactions: state.transactions.filter(
           el => el.creditedAccountId === action.accountId
         )
       }
+
     case 'CASH_OUT':
+      console.log(state, action)
       return {
         transactions: state.transactions,
         currentTransactions: state.transactions.filter(
@@ -79,6 +82,7 @@ export default function Authenticated() {
   const navigate = useNavigate()
   //user and userInfo
   const { user, logoff } = useAuth()
+
   const [balance, setBalance] = React.useState<string>('')
   //states to be used do to a transaction
   const [usernameToTransfer, setUsernameToTransfer] = React.useState('')
@@ -91,13 +95,7 @@ export default function Authenticated() {
   //
   React.useEffect(() => {
     ;(async () => {
-      const { data } = await api.get('/information')
-      if (data.error) {
-        logoff()
-      }
-      dispatch({ type: 'SET_TRANSACTIONS', transactions: data.transactions })
-
-      setBalance(data.balance)
+      await updateInfo()
     })()
   }, [])
 
@@ -110,6 +108,15 @@ export default function Authenticated() {
     return `${newDate.getDate()}/${
       newDate.getMonth() + 1
     }/${newDate.getFullYear()}`
+  }
+
+  async function updateInfo() {
+    const { data } = await api.get('/information')
+    if (data.error) {
+      //logoff()
+    }
+    dispatch({ type: 'SET_TRANSACTIONS', transactions: data.transactions })
+    setBalance(data.balance)
   }
 
   async function handleTransaction(event: React.FormEvent) {
@@ -131,6 +138,7 @@ export default function Authenticated() {
     }
 
     setTransactionError('')
+    updateInfo()
   }
 
   function dataSearch(event: React.FormEvent) {
@@ -159,7 +167,10 @@ export default function Authenticated() {
             )}
           </button>
         </div>
-        <button className="p-3 bg-blackCustom-400 rounded" onClick={logoff}>
+        <button
+          className="p-3 bg-blackCustom-400 rounded"
+          onClick={() => logoff()}
+        >
           Logoff
         </button>
       </div>
