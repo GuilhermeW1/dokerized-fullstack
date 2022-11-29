@@ -41,7 +41,6 @@ function reducer(state: ReducerTransactions, action: ActionType) {
         currentTransactions: state.transactions
       }
     case 'CASH_IN':
-      console.log(state, action)
       return {
         transactions: state.transactions,
         currentTransactions: state.transactions.filter(
@@ -50,7 +49,6 @@ function reducer(state: ReducerTransactions, action: ActionType) {
       }
 
     case 'CASH_OUT':
-      console.log(state, action)
       return {
         transactions: state.transactions,
         currentTransactions: state.transactions.filter(
@@ -69,10 +67,10 @@ function reducer(state: ReducerTransactions, action: ActionType) {
   }
 }
 
-const callAll =
-  (...fns: any[]) =>
-  (...args: any[]) =>
-    fns.forEach(fn => fn(...args))
+// const callAll =
+//   (...fns: any[]) =>
+//   (...args: any[]) =>
+//     fns.forEach(fn => fn(...args))
 
 function orderTransactions(transactions: TransactionType[]): TransactionType[] {
   return transactions.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
@@ -113,7 +111,8 @@ export default function Authenticated() {
   async function updateInfo() {
     const { data } = await api.get('/information')
     if (data.error) {
-      //logoff()
+      console.log('error update info')
+      logoff()
     }
     dispatch({ type: 'SET_TRANSACTIONS', transactions: data.transactions })
     setBalance(data.balance)
@@ -138,6 +137,8 @@ export default function Authenticated() {
     }
 
     setTransactionError('')
+    setUsernameToTransfer('')
+    setValue('')
     updateInfo()
   }
 

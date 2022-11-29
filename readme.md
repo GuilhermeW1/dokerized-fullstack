@@ -1,9 +1,7 @@
-pra rodar e so da um
+Para rodar o projeto e so usar o comando
 
 # docker-compose up -d
 
-depois vai ate a pasta web
+depois acessar a pagina web no
 
-# npm run dev
-
-tenho que colocar ela pra rodar junto ainda
+# http://localhost:5173

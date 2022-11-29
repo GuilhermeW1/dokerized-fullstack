@@ -44,12 +44,12 @@ function AuthContextProvider(props: AuthContextProviderProps) {
   React.useEffect(() => {
     const data = localStorage.getItem('token-ng')
 
+    //if thers no data return that means there is a new user or the user clear the cache
     if (!data) {
       return
     }
 
     const parsedData = JSON.parse(data ?? '')
-    console.log(parsedData.user)
     if (parsedData) {
       api.defaults.headers.Authorization = `Bearer ${parsedData.token}`
       setUser(parsedData.user)
@@ -75,11 +75,10 @@ function AuthContextProvider(props: AuthContextProviderProps) {
       password
     })
 
-    //return if there are errors
     if (data.status == 'Error') {
       return { status: data.status, message: data.message }
     }
-
+    //set the localstorage user and toke an set the api default headers autorization
     localStorage.setItem('token-ng', JSON.stringify(data))
 
     api.defaults.headers.Authorization = `Bearer ${data.token}`

@@ -14,3 +14,11 @@ services:
       - '3000:3000'
     depends_on:
       - db
+  web:
+    build: ./web
+    container_name: web-teste
+    ports:
+      - '5173:5173'
+    depends_on:
+      - db
+      - api
