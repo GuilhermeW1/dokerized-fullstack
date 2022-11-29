@@ -111,7 +111,6 @@ export default function Authenticated() {
   async function updateInfo() {
     const { data } = await api.get('/information')
     if (data.error) {
-      console.log('error update info')
       logoff()
     }
     dispatch({ type: 'SET_TRANSACTIONS', transactions: data.transactions })

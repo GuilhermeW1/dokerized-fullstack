@@ -15,8 +15,4 @@ router.get('/information', authMiddleware, UserController.accountInfo)
 
 router.post('/transaction', authMiddleware, TransactionController.transaction)
 
-router.get('/teste', (req: Request, res: Response) => {
-  res.json('teste')
-})
-
 export default router
