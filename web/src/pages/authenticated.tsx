@@ -7,6 +7,8 @@ import {
 } from 'react-icons/ai'
 import { MdOutlineVisibility as Visible } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import ChangeLanguage from '../components/langageChanger'
 
 type TransactionType = {
   createdAt: string
@@ -77,10 +79,8 @@ function orderTransactions(transactions: TransactionType[]): TransactionType[] {
 }
 
 export default function Authenticated() {
-  const navigate = useNavigate()
   //user and userInfo
-  const { user, logoff } = useAuth()
-
+  const { user, logoff, language } = useAuth()
   const [balance, setBalance] = React.useState<string>('')
   //states to be used do to a transaction
   const [usernameToTransfer, setUsernameToTransfer] = React.useState('')
@@ -90,26 +90,38 @@ export default function Authenticated() {
   const [dateFilter, setDateFilter] = React.useState('')
 
   const [balanceVisibility, setBalanceVisibility] = React.useState(false)
+
+  const navigate = useNavigate()
+  const { t } = useTranslation()
+
   //
   React.useEffect(() => {
     ;(async () => {
+      //if language change have to fetch the correct data or do somthing else
       await updateInfo()
     })()
-  }, [])
+  }, [language])
 
   const [{ transactions, currentTransactions }, dispatch] = React.useReducer(
     reducer,
     {} as ReducerTransactions
   )
   function brasilianDateFormater(data: string) {
+    function addZero(number: string) {
+      if (parseInt(number) <= 9) {
+        return '0' + number
+      }
+      return number
+    }
     const newDate = new Date(data)
-    return `${newDate.getDate()}/${
-      newDate.getMonth() + 1
-    }/${newDate.getFullYear()}`
+    return `${addZero(newDate.getDate().toString())}/${addZero(
+      (newDate.getMonth() + 1).toString()
+    )}/${newDate.getFullYear()}`
   }
 
   async function updateInfo() {
     const { data } = await api.get('/information')
+    //it should throw if the user token is expired so the user have to logon again
     if (data.error) {
       logoff()
     }
@@ -156,7 +168,7 @@ export default function Authenticated() {
       <div className="py-4 flex-row flex items-center justify-between bg-custom px-20 bg-blackCustom-500 ">
         <div className="bg-blackCustom-400 p-3 rounded gap-2 flex w-56 justify-between flex-row">
           <span>
-            Balance R$:{' '}
+            {t('homeBalance')}
             {balanceVisibility ? parseFloat(balance).toFixed(2) : '***'}
           </span>
           <button onClick={e => setBalanceVisibility(!balanceVisibility)}>
@@ -167,25 +179,28 @@ export default function Authenticated() {
             )}
           </button>
         </div>
+        <ChangeLanguage />
         <button
           className="p-3 bg-blackCustom-400 rounded"
           onClick={() => logoff()}
         >
-          Logoff
+          {t('homeLogout')}
         </button>
       </div>
 
       <div className="flex flex-col pt-5 justify-between mx-20 h-[70%] ">
         <div className="flex flex-row w-full items-center justify-center mb-10">
           <div className="bg-blackCustom-500 flex-col p-4 w-full justify-between flex  h-auto">
-            <h2 className=" text-sm mb-2 self-center ">Make transaction</h2>
+            <h2 className=" text-sm mb-2 self-center ">
+              {t('homeMakeTransaction')}
+            </h2>
             <form
               className="flex flex-row gap-5 items-bottom"
               onSubmit={handleTransaction}
             >
               <div className="flex flex-row gap-3">
                 <div className="flex flex-col gap-3 items-start">
-                  <label>User to transfer:</label>
+                  <label>{t('homeLblUserToTransfer')}</label>
                   <input
                     className="rounded bg-blackCustom-400 p-1"
                     type="text"
@@ -194,7 +209,7 @@ export default function Authenticated() {
                   />
                 </div>
                 <div className="flex flex-col gap-3 items-start">
-                  <label>Value:</label>
+                  <label>{t('homeLblValueToTransfer')}</label>
                   <input
                     className="rounded bg-blackCustom-400 p-1"
                     type="text"
@@ -207,7 +222,7 @@ export default function Authenticated() {
                     className="bg-blackCustom-400 p-1 px-2 rounded justify-self-start"
                     type="submit"
                   >
-                    Transfer
+                    {t('homeBtnTransfer')}
                   </button>
                 </div>
               </div>
@@ -221,7 +236,7 @@ export default function Authenticated() {
         </div>
         <div className="w-full  h-4/5">
           <div className=" mb-3 bg-blackCustom-400 flex justify-between p-3 rounded">
-            <span className="self-center ">Transactions</span>
+            <span className="self-center ">{t('homeTableTransactions')}</span>
             <div className="flex justify-end gap-10">
               <button
                 onClick={() =>
@@ -231,7 +246,7 @@ export default function Authenticated() {
                 }
                 className="bg-white text-black px-3 rounded-full"
               >
-                All Transactions
+                {t('homeTableAllTransactions')}
               </button>
               <button
                 onClick={() =>
@@ -242,7 +257,7 @@ export default function Authenticated() {
                 }
                 className="bg-blackCustom-500 px-3 rounded-full"
               >
-                Cash-In
+                {t('homeCreditedTransactions')}
               </button>
               <button
                 onClick={() =>
@@ -253,7 +268,7 @@ export default function Authenticated() {
                 }
                 className="bg-blackCustom-500 px-3 rounded-full"
               >
-                Cash-Out
+                {t('homeDebitedTransactions')}
               </button>
               <form
                 onSubmit={dataSearch}

@@ -1,0 +1,26 @@
+{
+  "translation": {
+    "loginTxtDescription": "Logar",
+    "loginLblUsername": "Usuario",
+    "loginLblPassword": "Senha",
+    "loginBtnLogin": "Entrar",
+    "loginTxtRegisterAccount": "Não tem uma conta? Registre aqui",
+
+    "registerTxtDescription": "Criar conta",
+    "registerLblUsername": "Usuario",
+    "registerLblPassword": "Senha",
+    "registerBtnRegister": "Entrar",
+    "registerTxtRegisterAccount": "Ja possui uma conta? Entre aqui",
+
+    "homeBalance": "Saldo R$:",
+    "homeLogout": "Sair",
+    "homeMakeTransaction": "Fazer uma transação",
+    "homeLblUserToTransfer": "Usuario a transferir",
+    "homeLblValueToTransfer": "Valor",
+    "homeBtnTransfer": "Transferir",
+    "homeTableTransactions": "Transações",
+    "homeTableAllTransactions": "Todas as Transações",
+    "homeCreditedTransactions": "Creditados",
+    "homeDebitedTransactions": "Debitados"
+  }
+}

@@ -14,6 +14,10 @@ class AuthenticateController {
 
     const { username, password } = req.body as ILogin
 
+    if (!username || !password) {
+      throw new Error('User and password required')
+    }
+
     const userAlreadyExists = await prisma.users.findFirst({
       where: { username }
     })
@@ -22,7 +26,10 @@ class AuthenticateController {
       throw new Error('User or password incorrect!')
     }
 
-    const passwordMatches = bcrypt.compare(password, userAlreadyExists.password)
+    const passwordMatches = await bcrypt.compare(
+      password,
+      userAlreadyExists.password
+    )
 
     if (!passwordMatches) {
       throw new Error('User or password incorrect!')

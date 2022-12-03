@@ -20,16 +20,13 @@ type LoginReturnType = {
   message: string
 }
 
-type TypeData = {
-  token: string
-  user: UserType
-}
-
 type AuthContextType = {
   user: UserType | undefined
   handleLogin: (username: string, password: string) => Promise<LoginReturnType>
   register: (username: string, password: string) => Promise<RegisterReturnType>
   logoff: () => void
+  language: string
+  changeLanguage: (language: string) => void
 }
 
 type AuthContextProviderProps = {
@@ -40,6 +37,7 @@ const AuthContext = React.createContext({} as AuthContextType)
 
 function AuthContextProvider(props: AuthContextProviderProps) {
   const [user, setUser] = React.useState<UserType>({} as UserType)
+  const [language, setLanguage] = React.useState('')
   const navigate = useNavigate()
   React.useEffect(() => {
     const data = localStorage.getItem('token-ng')
@@ -56,45 +54,57 @@ function AuthContextProvider(props: AuthContextProviderProps) {
     }
   }, [])
 
-  async function register(username: string, password: string) {
-    const { data } = await api.post('/register', {
-      username: username,
-      password: password
-    })
+  const register = React.useCallback(
+    async (username: string, password: string) => {
+      const { data } = await api.post('/register', {
+        username: username,
+        password: password
+      })
 
-    if (data.status == 'Error') {
-      return { status: data.status, message: data.message }
-    }
+      if (data.status == 'Error') {
+        return { status: data.status, message: data.message }
+      }
 
-    return { status: 'Success', message: 'Success' }
-  }
+      return { status: 'Success', message: 'Success' }
+    },
+    []
+  )
 
-  async function handleLogin(username: string, password: string) {
-    const { data } = await api.post('/authenticate', {
-      username,
-      password
-    })
+  const handleLogin = React.useCallback(
+    async (username: string, password: string) => {
+      const { data } = await api.post('/authenticate', {
+        username,
+        password
+      })
 
-    if (data.status == 'Error') {
-      return { status: data.status, message: data.message }
-    }
-    //set the localstorage user and toke an set the api default headers autorization
-    localStorage.setItem('token-ng', JSON.stringify(data))
+      if (data.status == 'Error') {
+        return { status: data.status, message: data.message }
+      }
+      //set the localstorage user and toke an set the api default headers autorization
+      localStorage.setItem('token-ng', JSON.stringify(data))
 
-    api.defaults.headers.Authorization = `Bearer ${data.token}`
-    setUser(data.user)
-    return { status: 'Success', message: 'Success' }
-  }
+      api.defaults.headers.Authorization = `Bearer ${data.token}`
+      setUser(data.user)
+      return { status: 'Success', message: 'Success' }
+    },
+    []
+  )
 
-  function logoff() {
+  const logoff = React.useCallback(() => {
     localStorage.removeItem('token-ng')
     api.defaults.headers.Authorization = null
     setUser({} as UserType)
     navigate('/')
-  }
+  }, [])
+
+  const changeLanguage = React.useCallback((language: string) => {
+    setLanguage(language)
+  }, [])
 
   return (
-    <AuthContext.Provider value={{ user, register, handleLogin, logoff }}>
+    <AuthContext.Provider
+      value={{ user, register, handleLogin, logoff, language, changeLanguage }}
+    >
       {props.children}
     </AuthContext.Provider>
   )
