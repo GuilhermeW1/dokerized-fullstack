@@ -39,6 +39,8 @@ class AuthenticateController {
       expiresIn: '1d'
     })
 
+    await prisma.$disconnect()
+
     const user = userAlreadyExists
     return res.json({ user, token })
   }

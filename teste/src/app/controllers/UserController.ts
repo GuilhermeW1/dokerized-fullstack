@@ -41,10 +41,12 @@ class UserController {
     try {
       prismaUser = await prisma.users.findFirst({ where: { username } })
     } catch (error: any) {
+      await prisma.$disconnect()
       throw new Error('Error to find user - register')
     }
 
     if (prismaUser) {
+      await prisma.$disconnect()
       return res.status(400).send('User already exists')
     }
 
@@ -69,6 +71,7 @@ class UserController {
       })
     ])
 
+    await prisma.$disconnect()
     return res.json(transactionQuery[1]) //the transactionQuery hav the array of account and users -- [1] selects users
   }
 
@@ -107,6 +110,7 @@ class UserController {
       transactions
     }
 
+    await prisma.$disconnect()
     return res.json(informations)
   }
 }

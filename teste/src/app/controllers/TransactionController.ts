@@ -25,10 +25,12 @@ class TransactionController {
     })
 
     if (!creditedUserExists) {
+      await prisma.$disconnect()
       throw new Error('User does not exists')
     }
 
     if (creditedUserExists.id == currentUserId) {
+      await prisma.$disconnect()
       throw new Error('You cant transfer to you')
     }
 
@@ -51,6 +53,7 @@ class TransactionController {
     )
 
     if (parsedValue > debitedBalanceCurrent) {
+      await prisma.$disconnect()
       throw new Error('Insufficient balance')
     }
 
@@ -85,9 +88,11 @@ class TransactionController {
       `
       ])
     } catch (error: any) {
+      await prisma.$disconnect()
       throw new Error(`Error ${error}`)
     }
 
+    await prisma.$disconnect()
     return res.status(202).json({ message: 'Transection done' })
   }
 }
