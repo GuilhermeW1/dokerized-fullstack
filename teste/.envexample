@@ -6,7 +6,15 @@
 
 DATABASE_URL="postgresql://dbuser:dbpassword@localhost:port/postgres?schema=public" 
 
-if running in localhost the localhost shloud be localhost 
-but if you triyng to run with docker compose the localhost have to be switched to ngdatabase 
-who is the database declared in the docker compose file if you chanche the db service container name 
-change this file too
+#if running in localhost the localhost shloud be localhost 
+#but if you triyng to run with docker compose the localhost have to be switched to ngdatabase 
+#who is the database declared in the docker compose file if you chanche the db service container name 
+#change this file too
+
+
+#to run with docker
+DATABASE_URL="postgresql://postgres:admin@ngdatabase:5432/postgres?schema=public" 
+
+
+#to run in localhost
+DATABASE_URL="postgresql://postgres:admin@localhost:5432/postgres?schema=public" 

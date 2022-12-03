@@ -18,3 +18,5 @@ para parar a aplicação e so rodar
 
 para rodar localmente voce devera rodar npm i tanto na pasta web quanto na pasta teste
 e devera subir um banco de dados
+
+``docker run --name some-postgres -e POSTGRES_PASSWORD=admin -p 5432:5432  -d postgres`
