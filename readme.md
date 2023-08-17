@@ -1,9 +1,10 @@
 # Esse é um pequeno projeto fetio para aprimorar minhas habilidades com docker
 
-## Para iniciar o projeto voce precisa ter instalado docker e docker compose
-[Docker](https://docs.docker.com/engine/install/).
-e
-[Docker compose](https://docs.docker.com/compose/install/).
+### Assim e como o projeto se parece
+<div align="center">
+<img src="https://github.com/GuilhermeW1/dokerized-fullstack/assets/88466173/0533c89c-a1d1-485a-a8ec-d5069c546435"/>
+</div>
+## Para iniciar o projeto voce precisa ter instalado [Docker](https://docs.docker.com/engine/install/) e [Docker compose](https://docs.docker.com/compose/install/)
 
 you have to configure the .env file in the api
 if you tryng to running the app without docker compose you have to somthing like this
