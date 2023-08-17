@@ -1,8 +1,9 @@
-## Para rodar o projeto voce precisa ter instalado docker e docker compose
+# Esse é um pequeno projeto fetio para aprimorar minhas habilidades com docker
 
-### https://docs.docker.com/engine/install/
-
-### https://docs.docker.com/compose/install/
+## Para iniciar o projeto voce precisa ter instalado docker e docker compose
+[Docker](https://docs.docker.com/engine/install/).
+e
+[Docker compose](https://docs.docker.com/compose/install/).
 
 you have to configure the .env file in the api
 if you tryng to running the app without docker compose you have to somthing like this
