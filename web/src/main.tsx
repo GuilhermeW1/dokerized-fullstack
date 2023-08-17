@@ -5,8 +5,6 @@ import { AuthContextProvider } from './context/auth-provider'
 import { ErrorBoundary } from 'react-error-boundary'
 import { BrowserRouter } from 'react-router-dom'
 
-import './i18n/index.ts'
-
 function ErrorFallback({ error }: { error: Error }) {
   return (
     <div role="alert" style={{ color: 'red' }}>

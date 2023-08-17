@@ -2,7 +2,6 @@ import * as React from 'react'
 import { useAuth } from '../context/auth-provider'
 import { useNavigate } from 'react-router-dom'
 
-import ChangeLanguage from '../components/langageChanger'
 import { useTranslation } from 'react-i18next'
 //import { t } from 'i18next'
 
@@ -28,20 +27,19 @@ export default function Login() {
 
   return (
     <div className="bg-blackCustom-700 h-screen w-screen text-white flex items-center justify-center flex-col">
-      <ChangeLanguage />
-      <span className="text-lg mb-3">{t('loginTxtDescription')}</span>
+      <span className="text-lg mb-3">Login</span>
       <form
         onSubmit={login}
         className="flex flex-col gap-3 bg-blackCustom-400 p-3 rounded"
       >
-        <label>{t('loginLblUsername')}</label>
+        <label>Usuario</label>
         <input
           className=" bg-blackCustom-600 border-none p-2"
           type="text"
           onChange={e => setLoginUsername(e.target.value)}
           value={loginUsername}
         />
-        <label>{t('loginLblPassword')}</label>
+        <label>Senha</label>
         <input
           className=" bg-blackCustom-600 border-none p-2"
           type="password"
@@ -54,14 +52,14 @@ export default function Login() {
           </span>
         ) : null}
         <button className="border bg-blackCustom-400 p-2" type="submit">
-          {t('loginBtnLogin')}
+          entrar
         </button>
       </form>
       <a
         className="cursor-pointer mt-2 text-sm "
         onClick={() => navigate('/register')}
       >
-        {t('loginTxtRegisterAccount')}
+        Não tem uma conta? Registre-se aqui
       </a>
     </div>
   )

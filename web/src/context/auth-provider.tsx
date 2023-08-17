@@ -26,7 +26,6 @@ type AuthContextType = {
   register: (username: string, password: string) => Promise<RegisterReturnType>
   logoff: () => void
   language: string
-  changeLanguage: (language: string) => void
 }
 
 type AuthContextProviderProps = {
@@ -97,13 +96,9 @@ function AuthContextProvider(props: AuthContextProviderProps) {
     navigate('/')
   }, [])
 
-  const changeLanguage = React.useCallback((language: string) => {
-    setLanguage(language)
-  }, [])
-
   return (
     <AuthContext.Provider
-      value={{ user, register, handleLogin, logoff, language, changeLanguage }}
+      value={{ user, register, handleLogin, logoff, language }}
     >
       {props.children}
     </AuthContext.Provider>

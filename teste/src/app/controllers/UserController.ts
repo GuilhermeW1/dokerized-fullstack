@@ -47,7 +47,7 @@ class UserController {
 
     if (prismaUser) {
       await prisma.$disconnect()
-      return res.status(400).send('User already exists')
+      throw new Error('User already exists')
     }
 
     //this create a primary key to be shared tween account and user

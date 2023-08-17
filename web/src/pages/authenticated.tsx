@@ -7,8 +7,6 @@ import {
 } from 'react-icons/ai'
 import { MdOutlineVisibility as Visible } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import ChangeLanguage from '../components/langageChanger'
 
 type TransactionType = {
   createdAt: string
@@ -45,7 +43,7 @@ function reducer(state: ReducerTransactions, action: ActionType) {
     case 'CASH_IN':
       return {
         transactions: state.transactions,
-        currentTransactions: state.transactions.filter(
+        currentTransactions: state.transactions?.filter(
           el => el.creditedAccountId === action.accountId
         )
       }
@@ -53,14 +51,14 @@ function reducer(state: ReducerTransactions, action: ActionType) {
     case 'CASH_OUT':
       return {
         transactions: state.transactions,
-        currentTransactions: state.transactions.filter(
+        currentTransactions: state.transactions?.filter(
           el => el.debitedAccountId === action.accountId
         )
       }
     case 'DATA':
       return {
         transactions: state.transactions,
-        currentTransactions: state.transactions.filter(
+        currentTransactions: state.transactions?.filter(
           el => el.createdAt.slice(0, 10).toString() == action.date
         )
       }
@@ -69,18 +67,13 @@ function reducer(state: ReducerTransactions, action: ActionType) {
   }
 }
 
-// const callAll =
-//   (...fns: any[]) =>
-//   (...args: any[]) =>
-//     fns.forEach(fn => fn(...args))
-
 function orderTransactions(transactions: TransactionType[]): TransactionType[] {
   return transactions.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
 }
 
 export default function Authenticated() {
   //user and userInfo
-  const { user, logoff, language } = useAuth()
+  const { user, logoff } = useAuth()
   const [balance, setBalance] = React.useState<string>('')
   //states to be used do to a transaction
   const [usernameToTransfer, setUsernameToTransfer] = React.useState('')
@@ -91,16 +84,7 @@ export default function Authenticated() {
 
   const [balanceVisibility, setBalanceVisibility] = React.useState(false)
 
-  const navigate = useNavigate()
-  const { t } = useTranslation()
-
-  //
-  React.useEffect(() => {
-    ;(async () => {
-      //if language change have to fetch the correct data or do somthing else
-      await updateInfo()
-    })()
-  }, [language])
+  // const navigate = useNavigate()
 
   const [{ transactions, currentTransactions }, dispatch] = React.useReducer(
     reducer,
@@ -133,7 +117,7 @@ export default function Authenticated() {
     event.preventDefault()
 
     if (!value || !usernameToTransfer) {
-      setTransactionError('user and value are required' as any)
+      setTransactionError('user and value are required')
       return
     }
 
@@ -163,66 +147,87 @@ export default function Authenticated() {
       setDateFilter('')
   }
 
+  React.useEffect(() => {
+    ;(async () => {
+      await updateInfo()
+    })()
+  }, [])
+  // className="bg-blackCustom-700 h-screen text-white "
   return (
-    <div className="bg-blackCustom-700 h-screen text-white text-lg">
-      <div className="py-4 flex-row flex items-center justify-between bg-custom px-20 bg-blackCustom-500 ">
-        <div className="bg-blackCustom-400 p-3 rounded gap-2 flex w-56 justify-between flex-row">
-          <span>
-            {t('homeBalance')}
-            {balanceVisibility ? parseFloat(balance).toFixed(2) : '***'}
-          </span>
-          <button onClick={e => setBalanceVisibility(!balanceVisibility)}>
-            {balanceVisibility ? (
-              <Visible width={24} />
-            ) : (
-              <Invisible width={24} />
-            )}
+    <>
+      <nav 
+        className="bg-blackCustom-500 max-h-16 fixed top-0 right-0 left-0"
+      >
+        <div 
+          className='max-w-[1024px] m-auto flex justify-between w-full px-4 py-2 gap-2'
+        >
+          <div className="bg-blackCustom-400 p-2 rounded gap-2 flex w-56 justify-between flex-row">
+            <span>
+              saldo {" "}
+              {balanceVisibility ? parseFloat(balance).toFixed(2) : '***'}
+            </span>
+            <button onClick={e => setBalanceVisibility(!balanceVisibility)}>
+              {balanceVisibility ? (
+                <Visible width={24} />
+              ) : (
+                <Invisible width={24} />
+              )}
+            </button>
+          </div>
+          
+          <button
+            className="p-2 bg-blackCustom-400 rounded"
+            onClick={() => logoff()}
+          >
+            logout
           </button>
         </div>
-        <ChangeLanguage />
-        <button
-          className="p-3 bg-blackCustom-400 rounded"
-          onClick={() => logoff()}
-        >
-          {t('homeLogout')}
-        </button>
-      </div>
+      </nav>
 
-      <div className="flex flex-col pt-5 justify-between mx-20 h-[70%] ">
-        <div className="flex flex-row w-full items-center justify-center mb-10">
-          <div className="bg-blackCustom-500 flex-col p-4 w-full justify-between flex  h-auto">
-            <h2 className=" text-sm mb-2 self-center ">
-              {t('homeMakeTransaction')}
+      <main 
+        className="flex max-w-[1024px] flex-col pt-[72px]  m-auto p-4 h-screen"
+      >
+        <div 
+          className="flex w-full items-center justify-center mb-5"
+        >
+          <div 
+            className="bg-blackCustom-500 flex-col p-2 w-full justify-between flex h-auto rounded-md"
+          >
+            <h2 className=" text-sm mb-2">
+              Transacao
             </h2>
             <form
-              className="flex flex-row gap-5 items-bottom"
               onSubmit={handleTransaction}
             >
-              <div className="flex flex-row gap-3">
+              <div 
+                className="flex md:flex-row flex-col gap-3 w-full md:max-w-full  "
+              >
                 <div className="flex flex-col gap-3 items-start">
-                  <label>{t('homeLblUserToTransfer')}</label>
+                  <label className='text-base'>Para</label>
                   <input
-                    className="rounded bg-blackCustom-400 p-1"
+                    className="rounded bg-blackCustom-400 p-1 w-full"
                     type="text"
                     value={usernameToTransfer}
                     onChange={e => setUsernameToTransfer(e.target.value)}
                   />
                 </div>
-                <div className="flex flex-col gap-3 items-start">
-                  <label>{t('homeLblValueToTransfer')}</label>
+
+                <div className="flex flex-col gap-3 items-start ">
+                  <label>Valor</label>
                   <input
-                    className="rounded bg-blackCustom-400 p-1"
+                    className="rounded bg-blackCustom-400 p-1 w-full"
                     type="text"
                     value={value}
                     onChange={e => setValue(e.target.value)}
                   />
                 </div>
-                <div className="flex flex-col gap-3 justify-end ml-2 ">
+                
+                <div className="flex flex-col gap-3 justify-end ">
                   <button
-                    className="bg-blackCustom-400 p-1 px-2 rounded justify-self-start"
+                    className="bg-blackCustom-400 p-1 px-2 rounded justify-self-start text-base" 
                     type="submit"
                   >
-                    {t('homeBtnTransfer')}
+                    Transferir
                   </button>
                 </div>
               </div>
@@ -234,19 +239,25 @@ export default function Authenticated() {
             ) : null}
           </div>
         </div>
-        <div className="w-full  h-4/5">
-          <div className=" mb-3 bg-blackCustom-400 flex justify-between p-3 rounded">
-            <span className="self-center ">{t('homeTableTransactions')}</span>
-            <div className="flex justify-end gap-10">
+
+          <div 
+            className=" mb-3 bg-blackCustom-400 flex flex-col p-3 rounded"
+          >
+            <span 
+              className="mb-3"
+            >
+              Transações
+            </span>
+            <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
               <button
                 onClick={() =>
                   dispatch({
                     type: 'ALL'
                   })
                 }
-                className="bg-white text-black px-3 rounded-full"
+                className="bg-white text-black p-2 rounded text-base"
               >
-                {t('homeTableAllTransactions')}
+                todas
               </button>
               <button
                 onClick={() =>
@@ -255,9 +266,9 @@ export default function Authenticated() {
                     accountId: user?.accountId ?? ''
                   })
                 }
-                className="bg-blackCustom-500 px-3 rounded-full"
+                className="bg-blackCustom-500 p-2 rounded"
               >
-                {t('homeCreditedTransactions')}
+                creditados
               </button>
               <button
                 onClick={() =>
@@ -266,9 +277,9 @@ export default function Authenticated() {
                     accountId: user?.accountId ?? ''
                   })
                 }
-                className="bg-blackCustom-500 px-3 rounded-full"
+                className="bg-blackCustom-500 p-2 rounded"
               >
-                {t('homeDebitedTransactions')}
+                debitados
               </button>
               <form
                 onSubmit={dataSearch}
@@ -278,7 +289,7 @@ export default function Authenticated() {
                   value={dateFilter}
                   onChange={e => setDateFilter(e.target.value)}
                   type="date"
-                  className="bg-blackCustom-600 p-2 border-none"
+                  className="bg-blackCustom-600 p-2 border-none text-white w-full"
                 />
                 <button
                   type="submit"
@@ -289,9 +300,10 @@ export default function Authenticated() {
               </form>
             </div>
           </div>
-          <ul className=" overflow-auto h-[90%]">
+
+          <ul className="overflow-auto max-h-full">
             {currentTransactions && currentTransactions.length > 0 ? (
-              orderTransactions(currentTransactions).map(item => (
+              orderTransactions(currentTransactions)?.map(item => (
                 <li key={item.id} className="mb-3">
                   <div className=" bg-blackCustom-500 px-10 py-3 flex justify-between">
                     <span className="w-28">
@@ -312,8 +324,8 @@ export default function Authenticated() {
               <div>Nothing found</div>
             )}
           </ul>
-        </div>
-      </div>
-    </div>
+        
+      </main>
+    </>
   )
 }

@@ -12,6 +12,7 @@ function Register() {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     const data = await register(registerUsername, registerPassword)
+    console.log(data)
     if (data.status == 'Error') {
       setRegisterError(data.message)
       return
@@ -22,19 +23,19 @@ function Register() {
 
   return (
     <div className="bg-blackCustom-700 h-screen w-screen text-white flex items-center justify-center flex-col">
-      <span className="text-lg mb-3">register</span>
+      <span className="text-lg mb-3">Cadastro</span>
       <form
         className="flex flex-col gap-3 bg-blackCustom-400 p-3 rounded"
         onSubmit={handleRegister}
       >
-        <label>username</label>
+        <label>Usuario</label>
         <input
           className=" bg-blackCustom-600 border-none p-2"
           type="text"
           onChange={e => setRegisterUsername(e.target.value)}
           value={registerUsername}
         />
-        <label>password</label>
+        <label>Senha</label>
         <input
           className=" bg-blackCustom-600 border-none p-2"
           type="password"
@@ -47,11 +48,11 @@ function Register() {
           </span>
         ) : null}
         <button className="border bg-blackCustom-400 p-2" type="submit">
-          Register Account
+          Registrar
         </button>
       </form>
       <a className="cursor-pointer mt-2 text-sm " onClick={() => navigate('/')}>
-        Do you have an account? Login here
+        Já possui uma conta? Logue agui
       </a>
     </div>
   )
