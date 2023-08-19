@@ -13,53 +13,20 @@ Aqui existem duas possibilidades você ira rodar o projeto com docker compose ou
 
 ### Docker compose
 Com o docker compose voce ira adicionar essa linhha dentro do .env
+``DATABASE_URL="postgresql://postgres:admin@ngdatabase:5432/postgres?schema=public"``
+#### Depois disso e so rodar o docker
+``docker-compose up -d``
+quando terminar o o app ficara disponivel em [localhost](http://localhost:5173)
+
 
 ### Local Host
 Primeiro voce devera criar um banco de dados para o projeto com o qual preferir ou criar usando o docker 
-```docker run --name postgres-to-teste -e POSTGRES_PASSWORD=admin -p 5430:5430 postgres```
+``docker run --name postgres-to-teste -e POSTGRES_PASSWORD=admin -p 5430:5430 postgres``
 Note que estou mapeando o banco para porta 5430 isso evita conflitos com o proprio postgres se o tiver instalado
-Depois é so adicionar essa linha dentro do .env
-DATABASE_URL="postgresql://postgres:admin@localhost:5430/postgres?schema=public" 
+#### Depois é so adicionar essa linha dentro do .env
+``DATABASE_URL="postgresql://postgres:admin@localhost:5430/postgres?schema=public"``
 e entrar dentro dos dois diretorios web e api e rodar o comando 
-```npm run dev```
+``npm run dev``
 em cada
-o app ficara disponivel em [localhost](localhost:5173)
+o app ficara disponivel em [localhost](http://localhost:5173)
 
-depois adicionar essa linha dentro do arquivo 
-
-
-DATABASE_URL="postgresql://postgres:admin@localhost:5430/postgres?schema=public" 
-
-
-you have to configure the .env file in the api
-if you tryng to running the app without docker compose you have to somthing like this
-
-DATABASE_URL="postgresql://postgres:admin@localhost:5430/postgres?schema=public" 
-where the name of the database is set to the localhost
-
-
-disclaimer: note that in localhost im using port 5430 this is because if you have postgres instaled in your machine it 
-wont work, in the docker-compose i have mapped the port 5432 to 5430 that prevent port conflitcs 
-## Depois de ter o docker e o docker compse instalado voce deve configurar o .env dentro da api e dpois rodar o comando abaixo na pasta onde o arquivo docker-compose.yaml estiver
-
-create a .env file inside the root of api and paste this
-DATABASE_URL="postgresql://postgres:admin@ngdatabase:5432/postgres?schema=public" 
-
-then type this in the root of the project
-`` docker-compose up -d ``
-
-and then acess the page on the web in the following link
-# http://localhost:5173
-
-# to stop the container you can type this
-`` docker-compose down ``
-
-
-para parar a aplicação e so rodar
-
-# docker compose down
-
-para rodar localmente voce devera rodar npm i tanto na pasta web quanto na pasta teste
-e devera subir um banco de dados
-
-``docker run --name some-postgres -e POSTGRES_PASSWORD=admin -p 5432:5432  -d postgres`
